@@ -1,0 +1,29 @@
+total 50
+-rw-r--r-- 1 Micro 197121  5920 一月  6 11:21 board.h
+-rw-r--r-- 1 Micro 197121  1016 一月  4 20:38 hyexpram.py
+-rw-r--r-- 1 Micro 197121   254 一月  6 11:42 main.c
+-rw-r--r-- 1 Micro 197121   643 一月  6 22:01 Makefile
+-rw-r--r-- 1 Micro 197121  1738 一月  6 19:58 ram.ld
+-rw-r--r-- 1 Micro 197121     0 一月  6 22:10 README
+-rw-r--r-- 1 Micro 197121  7246 一月  6 11:25 reset.S
+-rw-r--r-- 1 Micro 197121 24564 十月 16 13:36 spr-defs.h
+
+当OR复位时，设定从 bootrom（从机地址0xf） 的0x100 处启动，即启动地址：0xf0000100
+在bootrom中做启动引导，到ram（从机地址0x0）中去启动，使跳到0x00000100处运行
+
+
+在ram中存入的指令来源于 reset.S main.c ram.ld board.h spr-defs.h
+
+reset.S
+    与链接脚本中的地址建立联系
+    相当于是启动代码，用于初始化栈，bss，异常向量表，检查 icache 和 dcache 等
+    跳转到 main 函数执行
+  
+main.c
+    用于通过 c 编译环境来编程
+  
+ram.ld
+    链接脚本分配存储分布
+  
+hyexpram.py
+    用于将 *.or32 dump出来的文件 *.or32.txt 中的指令取出，并填充0x100之前的指令，输出到 sram.vmem
