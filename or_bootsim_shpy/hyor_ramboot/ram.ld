@@ -6,8 +6,7 @@ MEMORY
 /*        vectors : ORIGIN = 0x00000000, LENGTH = 0x0000100 */
 	/* Use all RAM */
 	/* Put all sections into ram */
-        ram0    : ORIGIN = 0x0000000, LENGTH = 0x0100 	
-        ram     : ORIGIN = 0x0000100, LENGTH = 0x1800 
+        ram     : ORIGIN = 0x0000000, LENGTH = 0x1800 
        /* vectors : ORIGIN = 0x00000000, LENGTH = 0x00002000 */
 	/* Use all RAM */
 	/* Put all sections into ram */
@@ -35,6 +34,11 @@ MEMORY
 
 SECTIONS
 {
+        .vectors :
+        {
+        *(.vectors)
+        } > ram
+
         .text :
         {
 	_text_begin = .;
@@ -70,11 +74,6 @@ SECTIONS
 	} > ram
 /*        } > ram2 */
 
-
-        .vectors :
-        {
-        *(.vectors)
-        } > ram
 
 
 }

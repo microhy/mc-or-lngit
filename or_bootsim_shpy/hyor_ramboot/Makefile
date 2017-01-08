@@ -7,7 +7,9 @@ export	CROSS_COMPILE
 AS = $(CROSS_COMPILE)as
 CC = $(CROSS_COMPILE)gcc
 LD = $(CROSS_COMPILE)ld
+OBJCOPY = $(CROSS_COMPILE)objcopy
 OBJDUMP = $(CROSS_COMPILE)objdump
+VMEM = sram.vmem
 
 HEADER = board.h spr-defs.h
 
@@ -26,15 +28,19 @@ main.o: main.c
 	$(CC) -c $< -o $@
 
 .PHONY:vmem
-vmem:$(OR32OBJ).txt
+vmem:$(OR32OBJ).bin $(OR32OBJ).txt
+
+$(OR32OBJ).bin:$(OR32OBJ)
+	$(OBJCOPY) -O binary $< $@
+	$$ORPSOC_HOME/sw/utils/bin2vmem $@ > $(VMEM)
 
 $(OR32OBJ).txt:$(OR32OBJ)
 	$(OBJDUMP) -d $< > $@ 
-	python hyexpram.py $@ 
+	##python hyexpram.py $@ 
+	less $@
+
 
 .PHONY:clean
 clean:
-	rm -f *.or32 *.o
-	rm -f *.or32.txt *.o.txt
-	rm -f *.vmem
-	
+	rm -f *.or32 *.o *.bin *.or32.txt *.o.txt
+	rm -f *.vmem	
