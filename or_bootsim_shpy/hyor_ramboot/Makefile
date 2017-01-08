@@ -10,6 +10,8 @@ LD = $(CROSS_COMPILE)ld
 OBJCOPY = $(CROSS_COMPILE)objcopy
 OBJDUMP = $(CROSS_COMPILE)objdump
 VMEM = sram.vmem
+LIBGCC := $(shell $(CC) $(CFLAGS) -print-libgcc-file-name)
+LDFLAGS+= $(LIBGCC)
 
 HEADER = board.h spr-defs.h
 
@@ -18,14 +20,18 @@ OR32OBJ = hyor_ramboot.or32
 .PHONY:all
 all:$(OR32OBJ)
 
-$(OR32OBJ): reset.o main.o ram.ld
-	$(LD) reset.o main.o -T ram.ld -o $@
+$(OR32OBJ): reset.o main.o ram.ld uart.o
+	$(LD) reset.o main.o uart.o -T ram.ld -o $@ 
 
-reset.o: reset.S
-	$(CC) -c $^ -o $@
-	
-main.o: main.c
+reset.o: reset.S board.h
 	$(CC) -c $< -o $@
+	
+main.o: main.c 
+	$(CC) -c $< -o $@
+
+uart.o:uart.c uart.h board.h
+	$(CC) -c $< -o $@ 
+	
 
 .PHONY:vmem
 vmem:$(OR32OBJ).bin $(OR32OBJ).txt

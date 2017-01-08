@@ -6,7 +6,7 @@ MEMORY
 /*        vectors : ORIGIN = 0x00000000, LENGTH = 0x0000100 */
 	/* Use all RAM */
 	/* Put all sections into ram */
-        ram     : ORIGIN = 0x0000000, LENGTH = 0x1800 
+        ram     : ORIGIN = 0x0000000, LENGTH = 0x1C00 
        /* vectors : ORIGIN = 0x00000000, LENGTH = 0x00002000 */
 	/* Use all RAM */
 	/* Put all sections into ram */

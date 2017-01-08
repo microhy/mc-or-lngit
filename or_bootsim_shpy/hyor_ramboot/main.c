@@ -1,4 +1,6 @@
-#include<stdio.h>
+//#include<stdio.h>
+
+#include"uart.h"
 
 volatile unsigned long timestamp = 0;
 
@@ -12,9 +14,9 @@ typedef signed int   s32;
 
 int main(void)
 {
-
+    char txbuf[]="Hello or";
     int i=0;
-	u32 *ptr_ram=NULL;
+	u32 *ptr_ram;
 
 	ptr_ram =(u32 *)RAM_ADDR_START;
 
@@ -23,7 +25,14 @@ int main(void)
 		*ptr_ram = 0x66660000;
 		ptr_ram++;
 	}
-     
+    
+	uart_init();
+	for(i=0;i<7; i++) 
+	{
+		uart_putc(txbuf[i]);
+	}
+
+	*ptr_ram = 0xffff0000;
     while(1);
     return 0;
 }
