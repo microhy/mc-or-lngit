@@ -1,0 +1,38 @@
+ifndef CROSS_COMPILE
+CROSS_COMPILE = or32-elf-
+endif
+
+export	CROSS_COMPILE
+
+AS = $(CROSS_COMPILE)as
+CC = $(CROSS_COMPILE)gcc
+LD = $(CROSS_COMPILE)ld
+OBJCOPY = $(CROSS_COMPILE)objcopy
+OBJDUMP = $(CROSS_COMPILE)objdump
+VMEM = sram.vmem
+LIBGCC := $(shell $(CC) $(CFLAGS) -print-libgcc-file-name)
+LDFLAGS+= $(LIBGCC)
+
+HEADER = board.h spr-defs.h
+
+EXE = led
+OR32ELF = $(EXE).elf
+OR32BIN = $(EXE).bin
+OR32BINSZ= $(EXE)_sz.bin
+
+.PHONY:all
+all:$(OR32BINSZ)
+
+$(OR32ELF): main.c board.h
+	$(CC) -mnewlib -mboard=atlys $< -o $@
+
+$(OR32BIN):$(OR32ELF)
+	$(OBJCOPY) -O binary --strip-debug $< $@
+
+$(OR32BINSZ):$(OR32BIN)
+	bin2binsizeword $< $@	
+	cp $@ /mnt/share
+
+.PHONY:clean
+clean:
+	rm -f *.bin *.elf 
