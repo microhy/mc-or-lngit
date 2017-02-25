@@ -1,4 +1,5 @@
 //#include "support.h"
+//#include<stdio.h>
 #include "board.h"
 #include "uart.h"
 
@@ -30,22 +31,22 @@ volatile int tx_level, rx_level;
 void uart_init(void)
 {
         int divisor;
-	float float_divisor;
+    float float_divisor;
 
         /* Reset receiver and transmiter */
         REG8(UART_BASE + UART_FCR) = UART_FCR_ENABLE_FIFO | UART_FCR_CLEAR_RCVR
-		| UART_FCR_CLEAR_XMIT | UART_FCR_TRIGGER_4;
+        | UART_FCR_CLEAR_XMIT | UART_FCR_TRIGGER_4;
  
         /* Disable all interrupts */
         REG8(UART_BASE + UART_IER) = 0x00;
  
         /* Set 8 bit char, 1 stop bit, no parity */
         REG8(UART_BASE + UART_LCR) = UART_LCR_WLEN8 & ~(UART_LCR_STOP | 
-							UART_LCR_PARITY);
+                            UART_LCR_PARITY);
 
         /* Set baud rate */
-//	float_divisor = IN_CLK/(16.0 * UART_BAUD_RATE);
-//	float_divisor += 0.50f; // Ensure round up
+//    float_divisor = IN_CLK/(16.0 * UART_BAUD_RATE);
+//    float_divisor += 0.50f; // Ensure round up
         //divisor = (int) float_divisor;
         divisor = 28;
 
@@ -76,6 +77,32 @@ char uart_getc(void)
         WAIT_FOR_CHAR;
         c = REG8(UART_BASE + UART_RX);
         return c;
+}
+
+//hy add 2017-2-25
+void uart_putnum(unsigned int num)
+{
+    unsigned char lsr;
+    char c[10]={'0','0','0','0','0','0','0','0','0','0'};
+    char *p=&c[9];
+    
+    while(num!=0)
+    {
+        *p= (num%10)+'0';
+		p--;    
+	    num=num/10;
+    }
+    
+    for(p=c; p<c+10; p++)
+    {
+        WAIT_FOR_THRE;
+        REG8(UART_BASE + UART_TX) = *p;
+        if(*p == '\n') {
+          WAIT_FOR_THRE;
+          REG8(UART_BASE + UART_TX) = '\r';
+        }
+        WAIT_FOR_XMITR;        
+    }
 }
 /*
 char uart_testc(void)

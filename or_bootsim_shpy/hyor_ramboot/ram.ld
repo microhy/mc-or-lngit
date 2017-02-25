@@ -1,12 +1,10 @@
-
-
-
 MEMORY
         {
 /*        vectors : ORIGIN = 0x00000000, LENGTH = 0x0000100 */
 	/* Use all RAM */
 	/* Put all sections into ram */
-        ram     : ORIGIN = 0x0000000, LENGTH = 0x1C00 
+        ram     : ORIGIN = 0x0000000, LENGTH = 0x1800 
+        stmem     : ORIGIN = 0x1c00, LENGTH = 0x400 
        /* vectors : ORIGIN = 0x00000000, LENGTH = 0x00002000 */
 	/* Use all RAM */
 	/* Put all sections into ram */
@@ -74,6 +72,10 @@ SECTIONS
 	} > ram
 /*        } > ram2 */
 
-
+		. = 0x1c00;
+	 	.stdata_mem_type : 
+		{
+			*(.stdata_mem_type)
+		} > stmem
 
 }

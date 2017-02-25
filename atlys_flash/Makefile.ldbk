@@ -7,7 +7,6 @@ export	CROSS_COMPILE
 AS = $(CROSS_COMPILE)as
 CC = $(CROSS_COMPILE)gcc
 LD = $(CROSS_COMPILE)ld
-STRIP = $(CROSS_COMPILE)strip
 OBJCOPY = $(CROSS_COMPILE)objcopy
 OBJDUMP = $(CROSS_COMPILE)objdump
 VMEM = sram.vmem
@@ -25,7 +24,7 @@ OR32BINSZ= $(EXE)_sz.bin
 all:$(OR32BINSZ)
 
 $(OR32ELF): reset.o main.o uart.o
-	$(LD)  $^ $(LDFLAGS) -T ram.ld -o $@
+	$(CC)  $^ -T ram.ld -o $@
 
 reset.o: reset.S board.h
 	$(CC) -c $< -o $@
@@ -40,11 +39,9 @@ $(OR32BIN):$(OR32ELF)
 	$(OBJCOPY) -O binary --strip-debug $< $@
 
 $(OR32BINSZ):$(OR32BIN)
-	bin2binsizeword $< $@
-	./utils/utils_bin2header $@	
+	bin2binsizeword $< $@	
 	cp $@ /mnt/share
-	cp or32_instruct.h /mnt/share
 
 .PHONY:clean
 clean:
-	rm -f *.bin *.elf *.o *.txt 
+	rm -f *.bin *.elf *.o 

@@ -5,6 +5,7 @@ extern char uart_testc(void);
 extern void uart_print_str(char *);
 extern void uart_print_long(unsigned long);
 
+extern void uart_putnum(unsigned int num);	//hy add 2017-2-25
 /* Register access macros */
 #define REG8(add) *((volatile unsigned char *)(add))
 #define REG16(add) *((volatile unsigned short *)(add))
