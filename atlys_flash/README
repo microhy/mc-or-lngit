@@ -23,5 +23,5 @@ the SoC is orpsocv2 based on or1200.
 such as the dp app, how to make sure the arry of Ddynamic store address in the sdram.
 	
 	maybe should to learning the uboot-master of atlys *.lds file, and the startup.s.
-may be reaclocte ???	
+may be relocate ???	
 	---- hymicro  2017-02-21
