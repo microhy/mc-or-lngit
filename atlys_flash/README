@@ -25,3 +25,7 @@ such as the dp app, how to make sure the arry of Ddynamic store address in the s
 	maybe should to learning the uboot-master of atlys *.lds file, and the startup.s.
 may be relocate ???	
 	---- hymicro  2017-02-21
+
+
+<hy 170322>
+	modify uart.c edit function uart_print_num, uart_print_str

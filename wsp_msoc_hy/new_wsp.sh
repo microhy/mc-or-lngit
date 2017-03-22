@@ -12,8 +12,17 @@ rm -rf $WSPNAME
 
 PRJ_HOST=$WSPNAME/prj_host
 mkdir -p $PRJ_HOST 
+
 touch $PRJ_HOST/main_host.c
+touch $PRJ_HOST/Makefile
 echo "<ok> touch main_host.c ok!"
+
+
+touch $WSPNAME/Makefile
+touch $WSPNAME/mkconfig
+mkdir $WSPNAME/com_lib_cu
+touch $WSPNAME/com_lib_cu/ram.ld
+touch $WSPNAME/com_lib_cu/reset.s
 
 CUNUM=16
 CUCNT=0
@@ -29,6 +38,7 @@ do
 	MAIN_CU=main_$CUNAME.c
 	mkdir $PRJ_CU 
 	touch $PRJ_CU/$MAIN_CU
+	touch $PRJ_CU/Makefile
 	CUCNT=`expr $CUCNT + 1`
 done
 

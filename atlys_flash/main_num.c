@@ -1,5 +1,13 @@
 #include <stdio.h>
 
+/*
+** debug the uart function :
+	uart_print_str()
+**
+**
+**
+*/
+
 //#define   DBG_OUT_FILE  
 //#define   DP_EN
 #define   UART_EN
@@ -29,18 +37,14 @@ volatile unsigned long timestamp = 0;
 #endif
 
 
-#define   M   (100)
+#define   M   (128)
 
-unsigned int g_pixel[M][M]={{0},{0}};
+unsigned int g_pixel[M][M]={0};
 
 
 void board_init()
 {
 	uart_init();
-	uart_putc('y');
-	uart_putc('\n');
-	uart_put_num(123455);
-	uart_putc('\n');
 	uart_print_str("----board init ok!\n");
 }
 
@@ -59,7 +63,7 @@ void int_main()
 int main()
 {
 	int i,j;
-	unsigned int b_num[M];
+	unsigned int b_num[M]={0};
 
 	board_init();
 	
@@ -75,10 +79,8 @@ int main()
 	{
 		for(j=0; j<M; j++)
 		{
-			uart_put_num(g_pixel[i][j]);
-			uart_putc('\t');
+			uart_putnum(g_pixel[i][j]);
 		}
-		uart_putc('\n');
 	}
 
 	uart_print_str("----main exit\n");

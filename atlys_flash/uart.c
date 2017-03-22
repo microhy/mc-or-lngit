@@ -79,21 +79,45 @@ char uart_getc(void)
         return c;
 }
 
+//hy add 20170322
+void uart_print_str(const char *str)
+{
+        unsigned char lsr;
+        
+		while(*str!='\0')
+		{		
+        	WAIT_FOR_THRE;
+        	REG8(UART_BASE + UART_TX) = *str++;
+	        if(*str == '\n') {
+    	      WAIT_FOR_THRE;
+        	  REG8(UART_BASE + UART_TX) = '\r';
+	        }
+		}
+        WAIT_FOR_XMITR;        
+}
+
 //hy add 2017-2-25
-void uart_putnum(unsigned int num)
+void uart_put_num(unsigned int num)
 {
     unsigned char lsr;
     char c[10]={'0','0','0','0','0','0','0','0','0','0'};
     char *p=&c[9];
-    
-    while(num!=0)
-    {
-        *p= (num%10)+'0';
-		p--;    
-	    num=num/10;
-    }
-    
-    for(p=c; p<c+10; p++)
+   
+	if(!num)
+	{	
+		p--;
+	}
+	else
+	{	
+    	while(num!=0)
+	    {
+        	*p= (num%10)+'0';
+			p--;    
+		    num=num/10;
+    	} 
+	} 
+    // p point the front of late valid c for the num
+    for(p++; p<c+10; p++)
     {
         WAIT_FOR_THRE;
         REG8(UART_BASE + UART_TX) = *p;
