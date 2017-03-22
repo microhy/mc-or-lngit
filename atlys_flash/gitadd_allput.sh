@@ -1,5 +1,6 @@
 #!/bin/bash
 
+#git pull
 git add *
-git commit -m="add ram.ld reset.S for debug, and run ok on atlys"
+git commit -m "edit uart.c modify function uart_print_str etc."
 git push
